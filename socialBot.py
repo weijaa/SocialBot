@@ -12,16 +12,16 @@ def response(keyword):
     url = 'http://news.fcu.edu.tw/wSite/lp?ctNode=31973&mp=101001&idPath='
     view = requests.get(url)
     soup = BeautifulSoup(view.text, 'html.parser')
-    report = soup.find_all('a', href = re.compile('http://web.pr.fcu.edu.tw/~pr/fest*'))
+    report = soup.find_all('a', href = re.compile('http://web.pr.fcu.edu.tw/~pr/fest*')) # 爬逢甲新聞
     news = []
     link = []
 
-    for i in report:
+    for i in report:   # 關鍵字比對
         if keyword in i.text:
             news.append(i.text)
             link.append(i['href'])
-    num = random.randint(0,len(news)-1)
-    print(num)
+    num = random.randint(0,len(news)-1)  #從符合的選項中隨機給一篇新聞
+    print(num)     
     print(news[num])
     print('link：',link[num])
     msg = news[num]+ 'Link：'+ link[num]
@@ -37,16 +37,16 @@ def hello():
 def webhook():
     req = request.get_json(silent=True, force=True)
     if req['queryResult']['parameters']['any'] != '':
-        keyword = req['queryResult']['parameters']['any']
+        keyword = req['queryResult']['parameters']['any'] #接收關鍵字
         print(keyword)
     
-    res_message = {"fulfillmentText": response(keyword)}
+    res_message = {"fulfillmentText": response(keyword)}  #回應
     print(res_message)
     
     return make_response(jsonify(res_message))
 
 if __name__ == "__main__":
     app.debug = True
-    app.run(host='0.0.0.0', port=8000)
+    app.run(host='0.0.0.0', port=5000)
 
 
